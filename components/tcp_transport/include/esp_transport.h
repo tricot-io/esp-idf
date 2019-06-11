@@ -65,6 +65,17 @@ esp_err_t esp_transport_list_destroy(esp_transport_list_handle_t list);
 esp_err_t esp_transport_list_add(esp_transport_list_handle_t list, esp_transport_handle_t t, const char *scheme);
 
 /**
+ * @brief      Remove the given transport.
+ *
+ * @param[in]  list  The list
+ * @param[in]  t     The transport
+ *
+ * @return
+ *     - ESP_OK
+ */
+esp_err_t esp_transport_list_remove(esp_transport_list_handle_t list, esp_transport_handle_t t);
+
+/**
  * @brief      This function will remove all transport from the list,
  *             invoke esp_transport_destroy of every transport have added this the list
  *
