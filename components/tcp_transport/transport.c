@@ -80,6 +80,16 @@ esp_err_t esp_transport_list_add(esp_transport_list_handle_t list, esp_transport
     return ESP_OK;
 }
 
+esp_err_t esp_transport_list_remove(esp_transport_list_handle_t list, esp_transport_handle_t t)
+{
+    if (list == NULL || t == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    // TODO(vtl): Possibly we should free t->scheme.
+    STAILQ_REMOVE(list, t, esp_transport_item_t, next);
+    return ESP_OK;
+}
+
 esp_transport_handle_t esp_transport_list_get_transport(esp_transport_list_handle_t list, const char *scheme)
 {
     if (!list) {
