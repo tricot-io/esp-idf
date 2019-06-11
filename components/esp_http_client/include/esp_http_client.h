@@ -29,6 +29,10 @@ extern "C" {
 typedef struct esp_http_client *esp_http_client_handle_t;
 typedef struct esp_http_client_event *esp_http_client_event_handle_t;
 
+// TODO(vtl): This is a copy of a typedef from tcp_transport, but we don't want to impose a public
+// dependency on that.
+typedef struct esp_transport_item_t* esp_transport_handle_t;
+
 /**
  * @brief   HTTP Client events id
  */
@@ -388,6 +392,19 @@ esp_http_client_transport_t esp_http_client_get_transport_type(esp_http_client_h
  *     - ESP_FAIL
  */
 esp_err_t esp_http_client_set_redirection(esp_http_client_handle_t client);
+
+/**
+ * @brief      Extracts the transport (used, e.g., to switch protocols). The only valid call after
+ *             this is esp_http_client_cleanup.
+ *
+ * @param[in]  client     The esp_http_client handle
+ * @param[out] transport  The transport
+ *
+ * @return
+ *     - ESP_OK
+ *     - ESP_FAIL
+ */
+esp_err_t esp_http_client_extract_transport(esp_http_client_handle_t client, esp_transport_handle_t* transport);
 
 #ifdef __cplusplus
 }
