@@ -1183,3 +1183,17 @@ esp_http_client_transport_t esp_http_client_get_transport_type(esp_http_client_h
         return HTTP_TRANSPORT_UNKNOWN;
     }
 }
+
+esp_err_t esp_http_client_extract_transport(esp_http_client_handle_t client, esp_transport_handle_t* transport)
+{
+    if (client == NULL || transport == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (client->transport == NULL) {
+        return ESP_FAIL;
+    }
+    esp_err_t err = esp_transport_list_remove(client->transport_list, client->transport);
+    *transport = client->transport;
+    client->transport = NULL;
+    return err;
+}
