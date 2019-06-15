@@ -1186,7 +1186,7 @@ esp_http_client_transport_t esp_http_client_get_transport_type(esp_http_client_h
     }
 }
 
-esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int* size, void** data) {
+esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int* size, const void** data) {
     if (client == NULL || size == NULL || data == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
