@@ -1184,6 +1184,15 @@ esp_http_client_transport_t esp_http_client_get_transport_type(esp_http_client_h
     }
 }
 
+esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int* size, void** data) {
+    if (client == NULL || size == NULL || data == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    *size = client->response->buffer->len - client->response->data_offset;
+    *data = client->response->buffer->data + client->response->data_offset;
+    return ESP_OK;
+}
+
 esp_err_t esp_http_client_extract_transport(esp_http_client_handle_t client, esp_transport_handle_t* transport)
 {
     if (client == NULL || transport == NULL) {

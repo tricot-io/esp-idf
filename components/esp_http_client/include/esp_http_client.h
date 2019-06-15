@@ -378,6 +378,21 @@ esp_err_t esp_http_client_cleanup(esp_http_client_handle_t client);
 esp_http_client_transport_t esp_http_client_get_transport_type(esp_http_client_handle_t client);
 
 /**
+ * @brief      Gets data that was over-read (e.g., data past the header that is not part of any
+ *             body). This is used before esp_http_client_extract_transport. The data pointer is
+ *             only valid before any other function call.
+ *
+ * @param[in]  client     The esp_http_client handle
+ * @param[out] size       The size of the over-read data
+ * @param[out] data       The pointer to the over-read data (may be null if the size is zero)
+ *
+ * @return
+ *     - ESP_OK
+ *     - ESP_FAIL
+ */
+esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int* size, void** data);
+
+/**
  * @brief      Extracts the transport (used, e.g., to switch protocols). The only valid call after
  *             this is esp_http_client_cleanup.
  *
