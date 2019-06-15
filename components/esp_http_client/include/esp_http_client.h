@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// Modifications copyright 2019 Tricot Inc.
 
 #ifndef _ESP_HTTP_CLIENT_H
 #define _ESP_HTTP_CLIENT_H
