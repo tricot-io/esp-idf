@@ -408,7 +408,7 @@ esp_err_t esp_http_client_set_redirection(esp_http_client_handle_t client);
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int* size, const void** data);
+esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int *size, const void **data);
 
 /**
  * @brief      Extracts the transport (used, e.g., to switch protocols). The only valid call after
@@ -421,7 +421,7 @@ esp_err_t esp_http_client_get_overread_data(esp_http_client_handle_t client, int
  *     - ESP_OK
  *     - ESP_FAIL
  */
-esp_err_t esp_http_client_extract_transport(esp_http_client_handle_t client, esp_transport_handle_t* transport);
+esp_err_t esp_http_client_extract_transport(esp_http_client_handle_t client, esp_transport_handle_t *transport);
 
 #ifdef __cplusplus
 }
