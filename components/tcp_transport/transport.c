@@ -30,20 +30,21 @@ static const char *TAG = "TRANSPORT";
  * Transport layer structure, which will provide functions, basic properties for transport types
  */
 struct esp_transport_item_t {
-    int             port;
-    int             socket;         /*!< Socket to use in this transport */
-    char            *scheme;        /*!< Tag name */
-    void            *context;       /*!< Context data */
-    void            *data;          /*!< Additional transport data */
-    connect_func    _connect;       /*!< Connect function of this transport */
-    io_read_func    _read;          /*!< Read */
-    io_func         _write;         /*!< Write */
-    trans_func      _close;         /*!< Close */
-    poll_func       _poll_read;     /*!< Poll and read */
-    poll_func       _poll_write;    /*!< Poll and write */
-    trans_func      _destroy;       /*!< Destroy and free transport */
-    connect_async_func _connect_async;      /*!< non-blocking connect function of this transport */
-    payload_transfer_func  _parent_transfer;       /*!< Function returning underlying transport layer */
+    int                     port;
+    int                     socket;             /*!< Socket to use in this transport */
+    char                    *scheme;            /*!< Tag name */
+    void                    *context;           /*!< Context data */
+    void                    *data;              /*!< Additional transport data */
+    connect_func            _connect;           /*!< Connect function of this transport */
+    io_read_func            _read;              /*!< Read */
+    io_func                 _write;             /*!< Write */
+    trans_func              _close;             /*!< Close */
+    poll_func               _poll_read;         /*!< Poll and read */
+    poll_func               _poll_write;        /*!< Poll and write */
+    trans_func              _destroy;           /*!< Destroy and free transport */
+    connect_async_func      _connect_async;     /*!< non-blocking connect function of this transport */
+    payload_transfer_func   _parent_transfer;   /*!< Function returning underlying transport layer */
+    get_select_fd_func      _get_select_fd;     /*!< Get FD */
 
     STAILQ_ENTRY(esp_transport_item_t) next;
 };
@@ -252,6 +253,7 @@ esp_err_t esp_transport_set_func(esp_transport_handle_t t,
     t->_destroy = _destroy;
     t->_connect_async = NULL;
     t->_parent_transfer = esp_transport_get_default_parent;
+    t->_get_select_fd = NULL;
     return ESP_OK;
 }
 
@@ -261,6 +263,14 @@ int esp_transport_get_default_port(esp_transport_handle_t t)
         return -1;
     }
     return t->port;
+}
+
+int esp_transport_get_select_fd(esp_transport_handle_t t)
+{
+    if (t && t->_get_select_fd) {
+        return t->_get_select_fd(t);
+    }
+    return -1;
 }
 
 esp_err_t esp_transport_set_default_port(esp_transport_handle_t t, int port)
@@ -287,5 +297,14 @@ esp_err_t esp_transport_set_parent_transport_func(esp_transport_handle_t t, payl
         return ESP_FAIL;
     }
     t->_parent_transfer = _parent_transport;
+    return ESP_OK;
+}
+
+esp_err_t esp_transport_set_get_select_fd_func(esp_transport_handle_t t, get_select_fd_func _get_select_fd)
+{
+    if (t == NULL) {
+        return ESP_FAIL;
+    }
+    t->_get_select_fd = _get_select_fd;
     return ESP_OK;
 }

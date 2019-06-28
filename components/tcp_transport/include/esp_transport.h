@@ -34,6 +34,7 @@ typedef int (*trans_func)(esp_transport_handle_t t);
 typedef int (*poll_func)(esp_transport_handle_t t, int timeout_ms);
 typedef int (*connect_async_func)(esp_transport_handle_t t, const char *host, int port, int timeout_ms);
 typedef esp_transport_handle_t (*payload_transfer_func)(esp_transport_handle_t);
+typedef int (*get_select_fd_func)(esp_transport_handle_t t);
 
 /**
  * @brief      Create transport list
@@ -252,6 +253,16 @@ void *esp_transport_get_context_data(esp_transport_handle_t t);
 esp_transport_handle_t esp_transport_get_payload_transport_handle(esp_transport_handle_t t);
 
 /**
+ * @brief      Get the file descripter for the transport, to be used with select() (it should not be
+ *             used for reading or writing, nor should it be closed).
+ *
+ * @param[in]  t        The transport handle
+ *
+ * @return     File descriptor (-1 on failure, e.g., if not supported)
+ */
+int esp_transport_get_select_fd(esp_transport_handle_t t);
+
+/**
  * @brief      Set the user context data for this transport
  *
  * @param[in]  t        The transport handle
@@ -310,6 +321,18 @@ esp_err_t esp_transport_set_async_connect_func(esp_transport_handle_t t, connect
  *     - ESP_FAIL
  */
 esp_err_t esp_transport_set_parent_transport_func(esp_transport_handle_t t, payload_transfer_func _parent_transport);
+
+/**
+ * @brief      Set the get select FD function for the transport handle.
+ *
+ * @param[in]  t                The transport handle
+ * @param[in]  _get_select_fd   The underlying get select FD function pointer
+ *
+ * @return
+ *     - ESP_OK
+ *     - ESP_FAIL
+ */
+esp_err_t esp_transport_set_get_select_fd_func(esp_transport_handle_t t, get_select_fd_func _get_select_fd);
 
 #ifdef __cplusplus
 }

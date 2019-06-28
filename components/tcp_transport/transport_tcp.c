@@ -153,6 +153,12 @@ static esp_err_t tcp_destroy(esp_transport_handle_t t)
     return 0;
 }
 
+static int tcp_get_select_fd(esp_transport_handle_t t)
+{
+    transport_tcp_t *tcp = esp_transport_get_context_data(t);
+    return tcp->sock;
+}
+
 esp_transport_handle_t esp_transport_tcp_init()
 {
     esp_transport_handle_t t = esp_transport_init();
@@ -160,6 +166,7 @@ esp_transport_handle_t esp_transport_tcp_init()
     ESP_TRANSPORT_MEM_CHECK(TAG, tcp, return NULL);
     tcp->sock = -1;
     esp_transport_set_func(t, tcp_connect, tcp_read, tcp_write, tcp_close, tcp_poll_read, tcp_poll_write, tcp_destroy);
+    esp_transport_set_get_select_fd_func(t, tcp_get_select_fd);
     esp_transport_set_context_data(t, tcp);
 
     return t;

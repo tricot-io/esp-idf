@@ -278,6 +278,13 @@ static esp_err_t ws_destroy(esp_transport_handle_t t)
     free(ws);
     return 0;
 }
+
+static int ws_get_select_fd(esp_transport_handle_t t)
+{
+    transport_ws_t *ws = esp_transport_get_context_data(t);
+    return esp_transport_get_select_fd(ws->parent);
+}
+
 void esp_transport_ws_set_path(esp_transport_handle_t t, const char *path)
 {
     transport_ws_t *ws = esp_transport_get_context_data(t);
@@ -303,6 +310,8 @@ esp_transport_handle_t esp_transport_ws_init(esp_transport_handle_t parent_handl
     esp_transport_set_func(t, ws_connect, ws_read, ws_write, ws_close, ws_poll_read, ws_poll_write, ws_destroy);
     // webocket underlying transfer is the payload transfer handle
     esp_transport_set_parent_transport_func(t, ws_get_payload_transport_handle);
+
+    esp_transport_set_get_select_fd_func(t, ws_get_select_fd);
 
     esp_transport_set_context_data(t, ws);
     return t;

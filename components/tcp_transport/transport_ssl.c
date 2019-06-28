@@ -152,6 +152,12 @@ static int ssl_destroy(esp_transport_handle_t t)
     return 0;
 }
 
+static int ssl_get_select_fd(esp_transport_handle_t t)
+{
+    transport_ssl_t *ssl = esp_transport_get_context_data(t);
+    return ssl->tls->sockfd;
+}
+
 void esp_transport_ssl_enable_global_ca_store(esp_transport_handle_t t)
 {
     transport_ssl_t *ssl = esp_transport_get_context_data(t);
@@ -195,6 +201,7 @@ esp_transport_handle_t esp_transport_ssl_init()
     esp_transport_set_context_data(t, ssl);
     esp_transport_set_func(t, ssl_connect, ssl_read, ssl_write, ssl_close, ssl_poll_read, ssl_poll_write, ssl_destroy);
     esp_transport_set_async_connect_func(t, ssl_connect_async);
+    esp_transport_set_get_select_fd_func(t, ssl_get_select_fd);
     return t;
 }
 
