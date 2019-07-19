@@ -821,7 +821,6 @@ int esp_vfs_select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *errorfds
     int (*socket_select)(int, fd_set *, fd_set *, fd_set *, struct timeval *) = NULL;
     for (int fd = 0; fd < nfds; ++fd) {
         _lock_acquire(&s_fd_table_lock);
-        const bool is_socket_fd = s_fd_table[fd].permanent;
         const int vfs_index = s_fd_table[fd].vfs_index;
         const int local_fd = s_fd_table[fd].local_fd;
         _lock_release(&s_fd_table_lock);
@@ -830,6 +829,7 @@ int esp_vfs_select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *errorfds
             continue;
         }
 
+        const bool is_socket_fd = !!s_vfs[vfs_index]->vfs.socket_select;
         if (is_socket_fd) {
             if (!socket_select) {
                 // no socket_select found yet so take a look
